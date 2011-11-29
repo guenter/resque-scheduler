@@ -107,7 +107,7 @@ module ResqueScheduler
     begin
       item = decode redis.lpop(key)
     rescue Resque::Helpers::DecodeException => e
-      log! e.message
+      STDERR.puts e.message
     end
 
     # If the list is empty, remove it.
