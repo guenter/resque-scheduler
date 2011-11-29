@@ -104,7 +104,11 @@ module ResqueScheduler
   def next_item_for_timestamp(timestamp)
     key = "delayed:#{timestamp.to_i}"
 
-    item = decode redis.lpop(key)
+    begin
+      item = decode redis.lpop(key)
+    rescue Resque::Helpers::DecodeException => e
+      log! e.message
+    end
 
     # If the list is empty, remove it.
     clean_up_timestamp(key, timestamp)
